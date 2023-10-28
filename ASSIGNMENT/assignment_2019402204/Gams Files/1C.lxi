@@ -1,0 +1,19 @@
+B 3 C o m p i l a t i o n
+B 60 Equation Listing    SOLVE question Using MIP From line 47
+D 63 cost
+D 68 supply
+D 79 demand
+B 91 Column Listing      SOLVE question Using MIP From line 47
+E 94 x
+E 116 z
+B 124 Model Statistics    SOLVE question Using MIP From line 47
+B 137 Solution Report     SOLVE question Using MIP From line 47
+F 223 cost
+F 227 supply
+F 236 demand
+G 247 x
+G 278 z
+B 288 E x e c u t i o n
+I 288 x
+I 299 x
+I 310 z

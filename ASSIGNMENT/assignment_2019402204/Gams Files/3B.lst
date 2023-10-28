@@ -1,0 +1,730 @@
+GAMS 37.1.0  r07954d5 Released Nov 11, 2021 WEX-WEI x86 64bit/MS Windows - 12/31/21 15:29:56 Page 1
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+C o m p i l a t i o n
+
+
+   1  Sets
+   2  i supply nodes /P1, P2, P3, P4/
+   3  j demand nodes /D1, D2, D3, D4, D5, Dummy/;
+   4   
+   5  Parameters
+   6  a(i) supplies for supply node i
+   7       /P1 290
+   8       P2 220
+   9       P3 180
+  10       P4 280/
+  11   
+  12  b(j) demands for demand node j
+  13       /D1 180
+  14       D2 200
+  15       D3 160
+  16       D4 140
+  17       D5 250
+  18       Dummy 40/;
+  19   
+  20   
+  21  Table c(i,j) the cost for ships
+  22   
+  23          D1  D2  D3  D4  D5  Dummy
+  24      P1  7.5 7   8   5.5 8   0
+  25      P2  6   6.5 7   7.5 8.5 0
+  26      P3  11  6   6.5 6   7   0
+  27      P4  9   7   10  6   7.5 0       ;
+  28   
+  29   
+  30  Variables
+  31      x(i,j) flow between supply node i to demand node j by using ship or train
+  32      t(i,j) flow between supply node i to demand node j by using rented ship
+  33      y(i,j) rent or buy
+  34      z total cost;
+  35   
+  36  Positive Variables x;
+  37  Positive Variables t;
+  38   
+  39  Binary Variables y;
+  40   
+  41  Equations
+  42      cost            define objective function
+  43      supply(i)       supply constraint
+  44      demand(j)       demand constraint
+  45      rent(i,j)       rent
+  46      invest(i,j)     buy
+  47      numofrent       controls number of rented ships
+  48      restrict(i,j)   controls 3-3 to 1-4             ;
+  49   
+  50   
+  51  cost..        z =e= sum((i,j), (c(i,j))*x(i,j) + 350*(1-y(i,j)));
+  52  supply(i)..         sum(j,x(i,j)+t(i,j)) =l= a(i);
+  53  demand(j)..         sum(i,x(i,j)+t(i,j)) =g= b(j);
+  54  invest(i,j)..       x(i,j)  =l= 10000000*y(i,j);
+  55  rent(i,j)..         t(i,j) =l= 10000000*(1-y(i,j));
+  56  numofrent..         sum((i,j),y(i,j)) =l= 4;
+  57  restrict(i,j)..     y("P1","D3") + y("P3","D3") =l= 1;
+  58   
+  59  Model question /all/;
+  60  question.OPTFILE=1;
+  61  Solve question using MIP minimizing z;
+  62  Display x.l, x.M, z.l;
+  63   
+
+
+COMPILATION TIME     =        0.016 SECONDS      3 MB  37.1.0 r07954d5 WEX-WEI
+GAMS 37.1.0  r07954d5 Released Nov 11, 2021 WEX-WEI x86 64bit/MS Windows - 12/31/21 15:29:56 Page 2
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Equation Listing    SOLVE question Using MIP From line 61
+
+
+---- cost  =E=  define objective function
+
+cost..  - 7.5*x(P1,D1) - 7*x(P1,D2) - 8*x(P1,D3) - 5.5*x(P1,D4) - 8*x(P1,D5) - 6*x(P2,D1) - 6.5*x(P2,D2) - 7*x(P2,D3) - 7.5*x(P2,D4) - 8.5*x(P2,D5) - 11*x(P3,D1) - 6*x(P3,D2) - 6.5*x(P3,D3) - 6*x(P3,D4) - 7*x(P3,D5) - 9*x(P4,D1) - 7*x(P4,D2) - 10*x(P4,D3) - 6*x(P4,D4) - 7.5*x(P4,D5) + 350*y(P1,D1) + 350*y(P1,D2) + 350*y(P1,D3) + 350*y(P1,D4) + 350*y(P1,D5) + 350*y(P1,Dummy) + 350*y(P2,D1) + 350*y(P2,D2) + 350*y(P2,D3) + 350*y(P2,D4) + 350*y(P2,D5) + 350*y(P2,Dummy) + 350*y(P3,D1) + 350*y(P3,D2) + 350*y(P3,D3) + 350*y(P3,D4) + 350*y(P3,D5) + 350*y(P3,Dummy) + 350*y(P4,D1) + 350*y(P4,D2) + 350*y(P4,D3) + 350*y(P4,D4) + 350*y(P4,D5) + 350*y(P4,Dummy) + z =E= 8400 ; (LHS = 0, INFES = 8400 ****)
+     
+
+---- supply  =L=  supply constraint
+
+supply(P1)..  x(P1,D1) + x(P1,D2) + x(P1,D3) + x(P1,D4) + x(P1,D5) + x(P1,Dummy) + t(P1,D1) + t(P1,D2) + t(P1,D3) + t(P1,D4) + t(P1,D5) + t(P1,Dummy) =L= 290 ; (LHS = 0)
+     
+supply(P2)..  x(P2,D1) + x(P2,D2) + x(P2,D3) + x(P2,D4) + x(P2,D5) + x(P2,Dummy) + t(P2,D1) + t(P2,D2) + t(P2,D3) + t(P2,D4) + t(P2,D5) + t(P2,Dummy) =L= 220 ; (LHS = 0)
+     
+supply(P3)..  x(P3,D1) + x(P3,D2) + x(P3,D3) + x(P3,D4) + x(P3,D5) + x(P3,Dummy) + t(P3,D1) + t(P3,D2) + t(P3,D3) + t(P3,D4) + t(P3,D5) + t(P3,Dummy) =L= 180 ; (LHS = 0)
+     
+REMAINING ENTRY SKIPPED
+
+
+---- demand  =G=  demand constraint
+
+demand(D1)..  x(P1,D1) + x(P2,D1) + x(P3,D1) + x(P4,D1) + t(P1,D1) + t(P2,D1) + t(P3,D1) + t(P4,D1) =G= 180 ; (LHS = 0, INFES = 180 ****)
+     
+demand(D2)..  x(P1,D2) + x(P2,D2) + x(P3,D2) + x(P4,D2) + t(P1,D2) + t(P2,D2) + t(P3,D2) + t(P4,D2) =G= 200 ; (LHS = 0, INFES = 200 ****)
+     
+demand(D3)..  x(P1,D3) + x(P2,D3) + x(P3,D3) + x(P4,D3) + t(P1,D3) + t(P2,D3) + t(P3,D3) + t(P4,D3) =G= 160 ; (LHS = 0, INFES = 160 ****)
+     
+REMAINING 3 ENTRIES SKIPPED
+
+
+---- rent  =L=  rent
+
+rent(P1,D1)..  t(P1,D1) + 10000000*y(P1,D1) =L= 10000000 ; (LHS = 0)
+     
+rent(P1,D2)..  t(P1,D2) + 10000000*y(P1,D2) =L= 10000000 ; (LHS = 0)
+     
+rent(P1,D3)..  t(P1,D3) + 10000000*y(P1,D3) =L= 10000000 ; (LHS = 0)
+     
+REMAINING 21 ENTRIES SKIPPED
+
+
+---- invest  =L=  buy
+
+invest(P1,D1)..  x(P1,D1) - 10000000*y(P1,D1) =L= 0 ; (LHS = 0)
+     
+invest(P1,D2)..  x(P1,D2) - 10000000*y(P1,D2) =L= 0 ; (LHS = 0)
+     
+invest(P1,D3)..  x(P1,D3) - 10000000*y(P1,D3) =L= 0 ; (LHS = 0)
+     
+REMAINING 21 ENTRIES SKIPPED
+
+
+---- numofrent  =L=  controls number of rented ships
+
+numofrent..  y(P1,D1) + y(P1,D2) + y(P1,D3) + y(P1,D4) + y(P1,D5) + y(P1,Dummy) + y(P2,D1) + y(P2,D2) + y(P2,D3) + y(P2,D4) + y(P2,D5) + y(P2,Dummy) + y(P3,D1) + y(P3,D2) + y(P3,D3) + y(P3,D4) + y(P3,D5) + y(P3,Dummy) + y(P4,D1) + y(P4,D2) + y(P4,D3) + y(P4,D4) + y(P4,D5) + y(P4,Dummy) =L= 4 ; (LHS = 0)
+     
+
+---- restrict  =L=  controls 3-3 to 1-4
+
+restrict(P1,D1)..  y(P1,D3) + y(P3,D3) =L= 1 ; (LHS = 0)
+     
+restrict(P1,D2)..  y(P1,D3) + y(P3,D3) =L= 1 ; (LHS = 0)
+     
+restrict(P1,D3)..  y(P1,D3) + y(P3,D3) =L= 1 ; (LHS = 0)
+     
+REMAINING 21 ENTRIES SKIPPED
+
+GAMS 37.1.0  r07954d5 Released Nov 11, 2021 WEX-WEI x86 64bit/MS Windows - 12/31/21 15:29:56 Page 3
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Column Listing      SOLVE question Using MIP From line 61
+
+
+---- x  flow between supply node i to demand node j by using ship or train
+
+x(P1,D1)
+                (.LO, .L, .UP, .M = 0, 0, +INF, 0)
+       -7.5     cost
+        1       supply(P1)
+        1       demand(D1)
+        1       invest(P1,D1)
+
+x(P1,D2)
+                (.LO, .L, .UP, .M = 0, 0, +INF, 0)
+       -7       cost
+        1       supply(P1)
+        1       demand(D2)
+        1       invest(P1,D2)
+
+x(P1,D3)
+                (.LO, .L, .UP, .M = 0, 0, +INF, 0)
+       -8       cost
+        1       supply(P1)
+        1       demand(D3)
+        1       invest(P1,D3)
+
+REMAINING 21 ENTRIES SKIPPED
+
+---- t  flow between supply node i to demand node j by using rented ship
+
+t(P1,D1)
+                (.LO, .L, .UP, .M = 0, 0, +INF, 0)
+        1       supply(P1)
+        1       demand(D1)
+        1       rent(P1,D1)
+
+t(P1,D2)
+                (.LO, .L, .UP, .M = 0, 0, +INF, 0)
+        1       supply(P1)
+        1       demand(D2)
+        1       rent(P1,D2)
+
+t(P1,D3)
+                (.LO, .L, .UP, .M = 0, 0, +INF, 0)
+        1       supply(P1)
+        1       demand(D3)
+        1       rent(P1,D3)
+
+REMAINING 21 ENTRIES SKIPPED
+
+---- y  rent or buy
+
+y(P1,D1)
+                (.LO, .L, .UP, .M = 0, 0, 1, 0)
+      350       cost
+  1.0000000E+7  rent(P1,D1)
+  -1.000000E+7  invest(P1,D1)
+        1       numofrent
+
+y(P1,D2)
+                (.LO, .L, .UP, .M = 0, 0, 1, 0)
+      350       cost
+  1.0000000E+7  rent(P1,D2)
+  -1.000000E+7  invest(P1,D2)
+        1       numofrent
+
+y(P1,D3)
+                (.LO, .L, .UP, .M = 0, 0, 1, 0)
+      350       cost
+  1.0000000E+7  rent(P1,D3)
+  -1.000000E+7  invest(P1,D3)
+        1       numofrent
+        1       restrict(P1,D1)
+        1       restrict(P1,D2)
+        1       restrict(P1,D3)
+        1       restrict(P1,D4)
+        1       restrict(P1,D5)
+        1       restrict(P1,Dummy)
+        1       restrict(P2,D1)
+        1       restrict(P2,D2)
+        1       restrict(P2,D3)
+        1       restrict(P2,D4)
+        1       restrict(P2,D5)
+        1       restrict(P2,Dummy)
+        1       restrict(P3,D1)
+        1       restrict(P3,D2)
+        1       restrict(P3,D3)
+        1       restrict(P3,D4)
+        1       restrict(P3,D5)
+        1       restrict(P3,Dummy)
+        1       restrict(P4,D1)
+        1       restrict(P4,D2)
+        1       restrict(P4,D3)
+        1       restrict(P4,D4)
+        1       restrict(P4,D5)
+        1       restrict(P4,Dummy)
+
+REMAINING 21 ENTRIES SKIPPED
+
+---- z  total cost
+
+z
+                (.LO, .L, .UP, .M = -INF, 0, +INF, 0)
+        1       cost
+
+GAMS 37.1.0  r07954d5 Released Nov 11, 2021 WEX-WEI x86 64bit/MS Windows - 12/31/21 15:29:56 Page 4
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Model Statistics    SOLVE question Using MIP From line 61
+
+
+MODEL STATISTICS
+
+BLOCKS OF EQUATIONS           7     SINGLE EQUATIONS           84
+BLOCKS OF VARIABLES           4     SINGLE VARIABLES           73
+NON ZERO ELEMENTS           309     DISCRETE VARIABLES         24
+
+
+GENERATION TIME      =        0.000 SECONDS      4 MB  37.1.0 r07954d5 WEX-WEI
+GAMS 37.1.0  r07954d5 Released Nov 11, 2021 WEX-WEI x86 64bit/MS Windows - 12/31/21 15:29:56 Page 5
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Solution Report     SOLVE question Using MIP From line 61
+
+
+               S O L V E      S U M M A R Y
+
+     MODEL   question            OBJECTIVE  z
+     TYPE    MIP                 DIRECTION  MINIMIZE
+     SOLVER  CPLEX               FROM LINE  61
+
+**** SOLVER STATUS     1 Normal Completion
+**** MODEL STATUS      1 Optimal
+**** OBJECTIVE VALUE             7000.0000
+
+ RESOURCE USAGE, LIMIT          0.031 10000000000.000
+ ITERATION COUNT, LIMIT        17    2147483647
+--- *** This solver runs with a demo license. No commercial use.
+
+Reading parameter(s) from "C:\Users\fatma\Desktop\assignment_2019402204\cplex.opt"
+>>  objrng all
+>>  rhsrng all
+Finished reading from "C:\Users\fatma\Desktop\assignment_2019402204\cplex.opt"
+
+--- GMO setup time: 0.00s
+--- GMO memory 0.52 Mb (peak 0.52 Mb)
+--- Dictionary memory 0.00 Mb
+--- Cplex 20.1.0.1 link memory 0.00 Mb (peak 0.01 Mb)
+--- Starting Cplex
+
+
+--- MIP status (101): integer optimal solution.
+--- Cplex Time: 0.00sec (det. 0.50 ticks)
+
+--- Fixing integer variables and solving final LP...
+
+
+--- Fixed MIP status (1): optimal.
+--- Cplex Time: 0.02sec (det. 0.10 ticks)
+
+--- Start ranging / sensitivity analysis...
+--- Right-hand-side ranging...
+
+EQUATION NAME                            LOWER           CURRENT             UPPER
+-------------                            -----           -------             -----
+cost                                      -INF                NA              +INF   =C
+supply(P1)                                 290               290       1.00001e+07   =C
+supply(P2)                                 220               220               280   =C
+supply(P3)                                 180               180               310   =C
+supply(P4)                                 280               280               340   =C
+demand(D1)                                 120               180               180   =C
+demand(D2)                                 140               200               200   =C
+demand(D3)                                -INF               160               160   =C
+demand(D4)                                  80               140               140   =C
+demand(D5)                                 120               250               250   =C
+demand(Dummy)                                0                40                40   =C
+rent(P1.D1)                              1e+07             1e+07              +INF   =C
+rent(P1.D2)                              1e+07             1e+07              +INF   =C
+rent(P1.D3)                                160             1e+07              +INF   =C
+rent(P1.D4)                              1e+07             1e+07              +INF   =C
+rent(P1.D5)                                130             1e+07              +INF   =C
+rent(P1.Dummy)                               0             1e+07              +INF   =C
+rent(P2.D1)                                  0             1e+07              +INF   =C
+rent(P2.D2)                                 80             1e+07              +INF   =C
+rent(P2.D3)                                  0             1e+07              +INF   =C
+rent(P2.D4)                                140             1e+07              +INF   =C
+rent(P2.D5)                                  0             1e+07              +INF   =C
+rent(P2.Dummy)                               0             1e+07              +INF   =C
+rent(P3.D1)                                 60             1e+07              +INF   =C
+rent(P3.D2)                                  0             1e+07              +INF   =C
+rent(P3.D3)                                  0             1e+07              +INF   =C
+rent(P3.D4)                                  0             1e+07              +INF   =C
+rent(P3.D5)                                120             1e+07              +INF   =C
+rent(P3.Dummy)                               0             1e+07              +INF   =C
+rent(P4.D1)                                120             1e+07              +INF   =C
+rent(P4.D2)                                120             1e+07              +INF   =C
+rent(P4.D3)                                  0             1e+07              +INF   =C
+rent(P4.D4)                                  0             1e+07              +INF   =C
+rent(P4.D5)                                  0             1e+07              +INF   =C
+rent(P4.Dummy)                           1e+07             1e+07              +INF   =C
+invest(P1.D1)                           -1e+07                 0              +INF   =C
+invest(P1.D2)                           -1e+07                 0              +INF   =C
+invest(P1.D3)                                0                 0              +INF   =C
+invest(P1.D4)                           -1e+07                 0              +INF   =C
+invest(P1.D5)                                0                 0              +INF   =C
+invest(P1.Dummy)                             0                 0              +INF   =C
+invest(P2.D1)                                0                 0              +INF   =C
+invest(P2.D2)                                0                 0              +INF   =C
+invest(P2.D3)                                0                 0              +INF   =C
+invest(P2.D4)                                0                 0              +INF   =C
+invest(P2.D5)                                0                 0              +INF   =C
+invest(P2.Dummy)                             0                 0              +INF   =C
+invest(P3.D1)                                0                 0              +INF   =C
+invest(P3.D2)                                0                 0              +INF   =C
+invest(P3.D3)                                0                 0              +INF   =C
+invest(P3.D4)                                0                 0              +INF   =C
+invest(P3.D5)                                0                 0              +INF   =C
+invest(P3.Dummy)                             0                 0              +INF   =C
+invest(P4.D1)                                0                 0              +INF   =C
+invest(P4.D2)                                0                 0              +INF   =C
+invest(P4.D3)                                0                 0              +INF   =C
+invest(P4.D4)                                0                 0              +INF   =C
+invest(P4.D5)                                0                 0              +INF   =C
+invest(P4.Dummy)                  -9.99996e+06                 0              +INF   =C
+numofrent                                    4                 4              +INF   =C
+restrict(P1.D1)                              0                 1              +INF   =C
+restrict(P1.D2)                              0                 1              +INF   =C
+restrict(P1.D3)                              0                 1              +INF   =C
+restrict(P1.D4)                              0                 1              +INF   =C
+restrict(P1.D5)                              0                 1              +INF   =C
+restrict(P1.Dummy)                           0                 1              +INF   =C
+restrict(P2.D1)                              0                 1              +INF   =C
+restrict(P2.D2)                              0                 1              +INF   =C
+restrict(P2.D3)                              0                 1              +INF   =C
+restrict(P2.D4)                              0                 1              +INF   =C
+restrict(P2.D5)                              0                 1              +INF   =C
+restrict(P2.Dummy)                           0                 1              +INF   =C
+restrict(P3.D1)                              0                 1              +INF   =C
+restrict(P3.D2)                              0                 1              +INF   =C
+restrict(P3.D3)                              0                 1              +INF   =C
+restrict(P3.D4)                              0                 1              +INF   =C
+restrict(P3.D5)                              0                 1              +INF   =C
+restrict(P3.Dummy)                           0                 1              +INF   =C
+restrict(P4.D1)                              0                 1              +INF   =C
+restrict(P4.D2)                              0                 1              +INF   =C
+restrict(P4.D3)                              0                 1              +INF   =C
+restrict(P4.D4)                              0                 1              +INF   =C
+restrict(P4.D5)                              0                 1              +INF   =C
+restrict(P4.Dummy)                           0                 1              +INF   =C
+
+--- Objective ranging...
+
+VARIABLE NAME                            LOWER           CURRENT             UPPER
+-------------                            -----           -------             -----
+x(P1.D1)                                     0               7.5              +INF   =C
+x(P1.D2)                                     0                 7              +INF   =C
+x(P1.D3)                                     0                 8              +INF   =C
+x(P1.D4)                                     0               5.5              +INF   =C
+x(P1.D5)                                     0                 8              +INF   =C
+x(P1.Dummy)                                  0                 0              +INF   =C
+x(P2.D1)                                     0                 6              +INF   =C
+x(P2.D2)                                     0               6.5              +INF   =C
+x(P2.D3)                                     0                 7              +INF   =C
+x(P2.D4)                                     0               7.5              +INF   =C
+x(P2.D5)                                     0               8.5              +INF   =C
+x(P2.Dummy)                                  0                 0              +INF   =C
+x(P3.D1)                                     0                11              +INF   =C
+x(P3.D2)                                     0                 6              +INF   =C
+x(P3.D3)                                     0               6.5              +INF   =C
+x(P3.D4)                                     0                 6              +INF   =C
+x(P3.D5)                                     0                 7              +INF   =C
+x(P3.Dummy)                                  0                 0              +INF   =C
+x(P4.D1)                                     0                 9              +INF   =C
+x(P4.D2)                                     0                 7              +INF   =C
+x(P4.D3)                                     0                10              +INF   =C
+x(P4.D4)                                     0                 6              +INF   =C
+x(P4.D5)                                     0               7.5              +INF   =C
+x(P4.Dummy)                                  0                 0                 0   =C
+t(P1.D1)                                     0                 0              +INF   =C
+t(P1.D2)                                     0                 0              +INF   =C
+t(P1.D3)                                  -INF                 0                 0   =C
+t(P1.D4)                                     0                 0              +INF   =C
+t(P1.D5)                                     0                 0                 0   =C
+t(P1.Dummy)                                  0                 0              +INF   =C
+t(P2.D1)                                     0                 0              +INF   =C
+t(P2.D2)                                     0                 0                 0   =C
+t(P2.D3)                                     0                 0              +INF   =C
+t(P2.D4)                                     0                 0                 0   =C
+t(P2.D5)                                     0                 0              +INF   =C
+t(P2.Dummy)                                  0                 0              +INF   =C
+t(P3.D1)                                     0                 0                 0   =C
+t(P3.D2)                                     0                 0              +INF   =C
+t(P3.D3)                                     0                 0              +INF   =C
+t(P3.D4)                                     0                 0              +INF   =C
+t(P3.D5)                                     0                 0                 0   =C
+t(P3.Dummy)                                  0                 0              +INF   =C
+t(P4.D1)                                     0                 0                 0   =C
+t(P4.D2)                                     0                 0                 0   =C
+t(P4.D3)                                     0                 0              +INF   =C
+t(P4.D4)                                     0                 0              +INF   =C
+t(P4.D5)                                     0                 0              +INF   =C
+t(P4.Dummy)                                  0                 0              +INF   =C
+y(P1.D1)                                  -INF              -350              +INF   =C
+y(P1.D2)                                  -INF              -350              +INF   =C
+y(P1.D3)                                  -INF              -350              +INF   =C
+y(P1.D4)                                  -INF              -350              +INF   =C
+y(P1.D5)                                  -INF              -350              +INF   =C
+y(P1.Dummy)                               -INF              -350              +INF   =C
+y(P2.D1)                                  -INF              -350              +INF   =C
+y(P2.D2)                                  -INF              -350              +INF   =C
+y(P2.D3)                                  -INF              -350              +INF   =C
+y(P2.D4)                                  -INF              -350              +INF   =C
+y(P2.D5)                                  -INF              -350              +INF   =C
+y(P2.Dummy)                               -INF              -350              +INF   =C
+y(P3.D1)                                  -INF              -350              +INF   =C
+y(P3.D2)                                  -INF              -350              +INF   =C
+y(P3.D3)                                  -INF              -350              +INF   =C
+y(P3.D4)                                  -INF              -350              +INF   =C
+y(P3.D5)                                  -INF              -350              +INF   =C
+y(P3.Dummy)                               -INF              -350              +INF   =C
+y(P4.D1)                                  -INF              -350              +INF   =C
+y(P4.D2)                                  -INF              -350              +INF   =C
+y(P4.D3)                                  -INF              -350              +INF   =C
+y(P4.D4)                                  -INF              -350              +INF   =C
+y(P4.D5)                                  -INF              -350              +INF   =C
+y(P4.Dummy)                               -INF              -350              +INF   =C
+z                                         -INF                NA              +INF   =C
+
+
+Proven optimal solution
+MIP Solution:         7000.000000    (17 iterations, 0 nodes)
+Final Solve:          7000.000000    (9 iterations)
+
+Best possible:        7000.000000
+Absolute gap:            0.000000
+Relative gap:            0.000000
+
+
+                           LOWER          LEVEL          UPPER         MARGINAL
+
+---- EQU cost            8400.0000      8400.0000      8400.0000         1.0000      
+
+  cost  define objective function
+
+---- EQU supply  supply constraint
+
+          LOWER          LEVEL          UPPER         MARGINAL
+
+P1        -INF          290.0000       290.0000         EPS         
+P2        -INF          220.0000       220.0000         EPS         
+P3        -INF          180.0000       180.0000         EPS         
+P4        -INF          280.0000       280.0000         EPS         
+
+---- EQU demand  demand constraint
+
+             LOWER          LEVEL          UPPER         MARGINAL
+
+D1          180.0000       180.0000        +INF            EPS         
+D2          200.0000       200.0000        +INF            EPS         
+D3          160.0000       160.0000        +INF             .          
+D4          140.0000       140.0000        +INF            EPS         
+D5          250.0000       250.0000        +INF            EPS         
+Dummy        40.0000        40.0000        +INF            EPS         
+
+---- EQU rent  rent
+
+                LOWER          LEVEL          UPPER         MARGINAL
+
+P1.D1           -INF      1.0000000E+7   1.0000000E+7          .          
+P1.D2           -INF      1.0000000E+7   1.0000000E+7          .          
+P1.D3           -INF          160.0000   1.0000000E+7          .          
+P1.D4           -INF      1.0000000E+7   1.0000000E+7          .          
+P1.D5           -INF          130.0000   1.0000000E+7          .          
+P1.Dummy        -INF             .       1.0000000E+7          .          
+P2.D1           -INF             .       1.0000000E+7          .          
+P2.D2           -INF           80.0000   1.0000000E+7          .          
+P2.D3           -INF             .       1.0000000E+7          .          
+P2.D4           -INF          140.0000   1.0000000E+7          .          
+P2.D5           -INF             .       1.0000000E+7          .          
+P2.Dummy        -INF             .       1.0000000E+7          .          
+P3.D1           -INF           60.0000   1.0000000E+7          .          
+P3.D2           -INF             .       1.0000000E+7          .          
+P3.D3           -INF             .       1.0000000E+7          .          
+P3.D4           -INF             .       1.0000000E+7          .          
+P3.D5           -INF          120.0000   1.0000000E+7          .          
+P3.Dummy        -INF             .       1.0000000E+7          .          
+P4.D1           -INF          120.0000   1.0000000E+7          .          
+P4.D2           -INF          120.0000   1.0000000E+7          .          
+P4.D3           -INF             .       1.0000000E+7          .          
+P4.D4           -INF             .       1.0000000E+7          .          
+P4.D5           -INF             .       1.0000000E+7          .          
+P4.Dummy        -INF      1.0000000E+7   1.0000000E+7          .          
+
+---- EQU invest  buy
+
+                LOWER          LEVEL          UPPER         MARGINAL
+
+P1.D1           -INF      -1.000000E+7          .              .          
+P1.D2           -INF      -1.000000E+7          .              .          
+P1.D3           -INF             .              .              .          
+P1.D4           -INF      -1.000000E+7          .              .          
+P1.D5           -INF             .              .              .          
+P1.Dummy        -INF             .              .              .          
+P2.D1           -INF             .              .              .          
+P2.D2           -INF             .              .              .          
+P2.D3           -INF             .              .              .          
+P2.D4           -INF             .              .              .          
+P2.D5           -INF             .              .              .          
+P2.Dummy        -INF             .              .              .          
+P3.D1           -INF             .              .              .          
+P3.D2           -INF             .              .              .          
+P3.D3           -INF             .              .              .          
+P3.D4           -INF             .              .              .          
+P3.D5           -INF             .              .              .          
+P3.Dummy        -INF             .              .              .          
+P4.D1           -INF             .              .              .          
+P4.D2           -INF             .              .              .          
+P4.D3           -INF             .              .              .          
+P4.D4           -INF             .              .              .          
+P4.D5           -INF             .              .              .          
+P4.Dummy        -INF      -0.999996E+7          .              .          
+
+                           LOWER          LEVEL          UPPER         MARGINAL
+
+---- EQU numofrent         -INF            4.0000         4.0000          .          
+
+  numofrent  controls number of rented ships
+
+---- EQU restrict  controls 3-3 to 1-4
+
+                LOWER          LEVEL          UPPER         MARGINAL
+
+P1.D1           -INF             .             1.0000          .          
+P1.D2           -INF             .             1.0000          .          
+P1.D3           -INF             .             1.0000          .          
+P1.D4           -INF             .             1.0000          .          
+P1.D5           -INF             .             1.0000          .          
+P1.Dummy        -INF             .             1.0000          .          
+P2.D1           -INF             .             1.0000          .          
+P2.D2           -INF             .             1.0000          .          
+P2.D3           -INF             .             1.0000          .          
+P2.D4           -INF             .             1.0000          .          
+P2.D5           -INF             .             1.0000          .          
+P2.Dummy        -INF             .             1.0000          .          
+P3.D1           -INF             .             1.0000          .          
+P3.D2           -INF             .             1.0000          .          
+P3.D3           -INF             .             1.0000          .          
+P3.D4           -INF             .             1.0000          .          
+P3.D5           -INF             .             1.0000          .          
+P3.Dummy        -INF             .             1.0000          .          
+P4.D1           -INF             .             1.0000          .          
+P4.D2           -INF             .             1.0000          .          
+P4.D3           -INF             .             1.0000          .          
+P4.D4           -INF             .             1.0000          .          
+P4.D5           -INF             .             1.0000          .          
+P4.Dummy        -INF             .             1.0000          .          
+
+---- VAR x  flow between supply node i to demand node j by using ship or train
+
+                LOWER          LEVEL          UPPER         MARGINAL
+
+P1.D1             .              .            +INF            7.5000      
+P1.D2             .              .            +INF            7.0000      
+P1.D3             .              .            +INF            8.0000      
+P1.D4             .              .            +INF            5.5000      
+P1.D5             .              .            +INF            8.0000      
+P1.Dummy          .              .            +INF            EPS         
+P2.D1             .              .            +INF            6.0000      
+P2.D2             .              .            +INF            6.5000      
+P2.D3             .              .            +INF            7.0000      
+P2.D4             .              .            +INF            7.5000      
+P2.D5             .              .            +INF            8.5000      
+P2.Dummy          .              .            +INF            EPS         
+P3.D1             .              .            +INF           11.0000      
+P3.D2             .              .            +INF            6.0000      
+P3.D3             .              .            +INF            6.5000      
+P3.D4             .              .            +INF            6.0000      
+P3.D5             .              .            +INF            7.0000      
+P3.Dummy          .              .            +INF            EPS         
+P4.D1             .              .            +INF            9.0000      
+P4.D2             .              .            +INF            7.0000      
+P4.D3             .              .            +INF           10.0000      
+P4.D4             .              .            +INF            6.0000      
+P4.D5             .              .            +INF            7.5000      
+P4.Dummy          .            40.0000        +INF             .          
+
+---- VAR t  flow between supply node i to demand node j by using rented ship
+
+                LOWER          LEVEL          UPPER         MARGINAL
+
+P1.D1             .              .            +INF            EPS         
+P1.D2             .              .            +INF            EPS         
+P1.D3             .           160.0000        +INF             .          
+P1.D4             .              .            +INF            EPS         
+P1.D5             .           130.0000        +INF             .          
+P1.Dummy          .              .            +INF            EPS         
+P2.D1             .              .            +INF            EPS         
+P2.D2             .            80.0000        +INF             .          
+P2.D3             .              .            +INF            EPS         
+P2.D4             .           140.0000        +INF             .          
+P2.D5             .              .            +INF            EPS         
+P2.Dummy          .              .            +INF            EPS         
+P3.D1             .            60.0000        +INF             .          
+P3.D2             .              .            +INF            EPS         
+P3.D3             .              .            +INF            EPS         
+P3.D4             .              .            +INF            EPS         
+P3.D5             .           120.0000        +INF             .          
+P3.Dummy          .              .            +INF            EPS         
+P4.D1             .           120.0000        +INF             .          
+P4.D2             .           120.0000        +INF             .          
+P4.D3             .              .            +INF            EPS         
+P4.D4             .              .            +INF            EPS         
+P4.D5             .              .            +INF            EPS         
+P4.Dummy          .              .            +INF            EPS         
+
+---- VAR y  rent or buy
+
+                LOWER          LEVEL          UPPER         MARGINAL
+
+P1.D1             .             1.0000         1.0000      -350.0000      
+P1.D2             .             1.0000         1.0000      -350.0000      
+P1.D3             .              .             1.0000      -350.0000      
+P1.D4             .             1.0000         1.0000      -350.0000      
+P1.D5             .              .             1.0000      -350.0000      
+P1.Dummy          .              .             1.0000      -350.0000      
+P2.D1             .              .             1.0000      -350.0000      
+P2.D2             .              .             1.0000      -350.0000      
+P2.D3             .              .             1.0000      -350.0000      
+P2.D4             .              .             1.0000      -350.0000      
+P2.D5             .              .             1.0000      -350.0000      
+P2.Dummy          .              .             1.0000      -350.0000      
+P3.D1             .              .             1.0000      -350.0000      
+P3.D2             .              .             1.0000      -350.0000      
+P3.D3             .              .             1.0000      -350.0000      
+P3.D4             .              .             1.0000      -350.0000      
+P3.D5             .              .             1.0000      -350.0000      
+P3.Dummy          .              .             1.0000      -350.0000      
+P4.D1             .              .             1.0000      -350.0000      
+P4.D2             .              .             1.0000      -350.0000      
+P4.D3             .              .             1.0000      -350.0000      
+P4.D4             .              .             1.0000      -350.0000      
+P4.D5             .              .             1.0000      -350.0000      
+P4.Dummy          .             1.0000         1.0000      -350.0000      
+
+                           LOWER          LEVEL          UPPER         MARGINAL
+
+---- VAR z                 -INF         7000.0000        +INF             .          
+
+  z  total cost
+
+
+**** REPORT SUMMARY :        0     NONOPT
+                             0 INFEASIBLE
+                             0  UNBOUNDED
+GAMS 37.1.0  r07954d5 Released Nov 11, 2021 WEX-WEI x86 64bit/MS Windows - 12/31/21 15:29:56 Page 6
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+E x e c u t i o n
+
+
+----     62 VARIABLE x.L  flow between supply node i to demand node j by using ship or train
+
+         Dummy
+
+P4      40.000
+
+
+----     62 VARIABLE x.M  flow between supply node i to demand node j by using ship or train
+
+            D1          D2          D3          D4          D5       Dummy
+
+P1       7.500       7.000       8.000       5.500       8.000         EPS
+P2       6.000       6.500       7.000       7.500       8.500         EPS
+P3      11.000       6.000       6.500       6.000       7.000         EPS
+P4       9.000       7.000      10.000       6.000       7.500
+
+
+----     62 VARIABLE z.L                   =     7000.000  total cost
+
+
+EXECUTION TIME       =        0.156 SECONDS      4 MB  37.1.0 r07954d5 WEX-WEI
+
+
+USER: GAMS Demo license for FATMANUR YAMAN           G211230|0002CO-GEN
+      BOGAZICI UNIVERSITY, Turkey                              DL057000
+
+
+**** FILE SUMMARY
+
+Input      C:\Users\fatma\Desktop\assignment_2019402204\3B.gms
+Output     C:\Users\fatma\Desktop\assignment_2019402204\3B.lst

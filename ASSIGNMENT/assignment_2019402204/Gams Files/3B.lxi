@@ -1,0 +1,31 @@
+B 3 C o m p i l a t i o n
+B 74 Equation Listing    SOLVE question Using MIP From line 61
+D 77 cost
+D 82 supply
+D 93 demand
+D 104 rent
+D 115 invest
+D 126 numofrent
+D 131 restrict
+B 143 Column Listing      SOLVE question Using MIP From line 61
+E 146 x
+E 171 t
+E 193 y
+E 242 z
+B 250 Model Statistics    SOLVE question Using MIP From line 61
+B 263 Solution Report     SOLVE question Using MIP From line 61
+F 481 cost
+F 485 supply
+F 494 demand
+F 505 rent
+F 534 invest
+F 565 numofrent
+F 569 restrict
+G 598 x
+G 627 t
+G 656 y
+G 687 z
+B 697 E x e c u t i o n
+I 697 x
+I 705 x
+I 716 z

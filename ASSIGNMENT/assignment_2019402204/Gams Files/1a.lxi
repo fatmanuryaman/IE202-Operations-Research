@@ -1,0 +1,19 @@
+B 3 C o m p i l a t i o n
+B 77 Equation Listing    SOLVE question Using LP From line 61
+D 80 cost
+D 85 supply
+D 96 demand
+B 108 Column Listing      SOLVE question Using LP From line 61
+E 111 x
+E 133 z
+B 141 Model Statistics    SOLVE question Using LP From line 61
+B 154 Solution Report     SOLVE question Using LP From line 61
+F 240 cost
+F 244 supply
+F 253 demand
+G 264 x
+G 295 z
+B 305 E x e c u t i o n
+I 305 x
+I 316 x
+I 327 z

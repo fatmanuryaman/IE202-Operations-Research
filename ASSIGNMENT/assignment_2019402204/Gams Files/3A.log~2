@@ -1,0 +1,36 @@
+
+--- Job 3A.gms Start 12/31/21 15:28:53 37.1.0 r07954d5 WEX-WEI x86 64bit/MS Windows
+--- Applying:
+    C:\GAMS\37\gmsprmNT.txt
+--- GAMS Parameters defined
+    Input C:\Users\fatma\Desktop\assignment_2019402204\3A.gms
+    PageSize 0
+    ScrDir C:\Users\fatma\Desktop\assignment_2019402204\225a\
+    SysDir C:\GAMS\37\
+    LogOption 3
+    ErrMsg 1
+    ErrorLog 99
+    IDE 1
+    LstTitleLeftAligned 1
+Licensee: GAMS Demo license for FATMANUR YAMAN           G211230|0002CO-GEN
+          BOGAZICI UNIVERSITY, Turkey                              DL057000
+          C:\Users\fatma\Documents\GAMS\gamslice.txt
+          fatmanur.yaman@boun.edu.tr, FATMANUR YAMAN                       
+          Demo license for demonstration and instructional purposes only
+Processor information: 1 socket(s), 6 core(s), and 12 thread(s) available
+GAMS 37.1.0   Copyright (C) 1987-2021 GAMS Development. All rights reserved
+--- Starting compilation
+--- 3A.gms(58) 3 Mb 2 Errors
+*** Error  71 in C:\Users\fatma\Desktop\assignment_2019402204\3A.gms
+    The symbol shown has been declared as an equation, but no
+       Symbolic equation (..) was found. hint - look for commas in the
+       Documentation text for the equations. use quotes around the
+       Text or eliminate the commas.
+*** Error 256 in C:\Users\fatma\Desktop\assignment_2019402204\3A.gms
+    Error(s) in analyzing solve statement.
+*** The following MIP errors were detected in model question:
+     71 numofrent is an undefined equation
+     71 restrict is an undefined equation
+--- 3A.gms(60) 3 Mb 2 Errors
+*** Status: Compilation error(s)
+--- Job 3A.gms Stop 12/31/21 15:28:53 elapsed 0:00:00.018

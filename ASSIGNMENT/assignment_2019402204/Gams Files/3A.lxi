@@ -1,0 +1,27 @@
+B 3 C o m p i l a t i o n
+B 71 Equation Listing    SOLVE question Using MIP From line 58
+D 74 cost
+D 79 supply
+D 90 demand
+D 101 rent
+D 112 invest
+B 124 Column Listing      SOLVE question Using MIP From line 58
+E 127 x
+E 152 t
+E 174 y
+E 196 z
+B 204 Model Statistics    SOLVE question Using MIP From line 58
+B 217 Solution Report     SOLVE question Using MIP From line 58
+F 410 cost
+F 414 supply
+F 423 demand
+F 434 rent
+F 463 invest
+G 492 x
+G 521 t
+G 550 y
+G 581 z
+B 591 E x e c u t i o n
+I 591 x
+I 600 x
+I 611 z

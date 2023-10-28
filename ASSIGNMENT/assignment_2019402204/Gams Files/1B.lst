@@ -1,0 +1,331 @@
+GAMS 37.1.0  r07954d5 Released Nov 11, 2021 WEX-WEI x86 64bit/MS Windows - 12/31/21 15:27:50 Page 1
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+C o m p i l a t i o n
+
+
+   1  Sets
+   2  i supply nodes /P1, P2, P3, P4/
+   3  j demand nodes /D1, D2, D3, D4, D5, Dummy/;
+   4   
+   5  Parameters
+   6  a(i) supplies for supply node i
+   7       /P1 290
+   8       P2 220
+   9       P3 180
+  10       P4 280/
+  11   
+  12  b(j) demands for demand node j
+  13       /D1 180
+  14       D2 200
+  15       D3 160
+  16       D4 140
+  17       D5 250
+  18       Dummy 40/;
+  19   
+  20   
+  21  Table s(i,j) unit cost by ship
+  22   
+  23          D1  D2  D3  D4  D5  Dummy
+  24      P1  5.5 6   8   3.5 4   0
+  25      P2  3   4.5 4   6.5 6   0
+  26      P3  11  6   3   4   4.5 0
+  27      P4  5   4.5 7   3   7.5 0       ;
+  28   
+  29  Table c(i,j) investment cost for ships
+  30   
+  31          D1  D2  D3  D4  D5  Dummy
+  32      P1  2   3   0   2   4   0
+  33      P2  3   2   4   1   2   0
+  34      P3  0   0   4   3   5   0
+  35      P4  5   3   3   4   0   0       ;
+  36   
+  37  Positive Variables
+  38      x(i,j) flow between supply node i to demand node j;
+  39   
+  40  Variables
+  41      z total cost;
+  42   
+  43  Equations
+  44      cost        define objective function
+  45      supply(i)   supply constraint
+  46      demand(j)   demand constraint       ;
+  47   
+  48  cost..        z =e= sum((i,j), (s(i,j)+c(i,j))*x(i,j));
+  49  supply(i)..         sum(j,x(i,j)) =l= a(i);
+  50  demand(j)..         sum(i,x(i,j)) =g= b(j);
+  51   
+  52  Model question /all/;
+  53  question.OPTFILE=1;
+  54  Solve question using lp minimizing z;
+  55  Display x.l, x.M, z.l;
+  56   
+
+
+COMPILATION TIME     =        0.000 SECONDS      3 MB  37.1.0 r07954d5 WEX-WEI
+GAMS 37.1.0  r07954d5 Released Nov 11, 2021 WEX-WEI x86 64bit/MS Windows - 12/31/21 15:27:50 Page 2
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Equation Listing    SOLVE question Using LP From line 54
+
+
+---- cost  =E=  define objective function
+
+cost..  - 7.5*x(P1,D1) - 9*x(P1,D2) - 8*x(P1,D3) - 5.5*x(P1,D4) - 8*x(P1,D5) - 6*x(P2,D1) - 6.5*x(P2,D2) - 8*x(P2,D3) - 7.5*x(P2,D4) - 8*x(P2,D5) - 11*x(P3,D1) - 6*x(P3,D2) - 7*x(P3,D3) - 7*x(P3,D4) - 9.5*x(P3,D5) - 10*x(P4,D1) - 7.5*x(P4,D2) - 10*x(P4,D3) - 7*x(P4,D4) - 7.5*x(P4,D5) + z =E= 0 ; (LHS = 0)
+     
+
+---- supply  =L=  supply constraint
+
+supply(P1)..  x(P1,D1) + x(P1,D2) + x(P1,D3) + x(P1,D4) + x(P1,D5) + x(P1,Dummy) =L= 290 ; (LHS = 0)
+     
+supply(P2)..  x(P2,D1) + x(P2,D2) + x(P2,D3) + x(P2,D4) + x(P2,D5) + x(P2,Dummy) =L= 220 ; (LHS = 0)
+     
+supply(P3)..  x(P3,D1) + x(P3,D2) + x(P3,D3) + x(P3,D4) + x(P3,D5) + x(P3,Dummy) =L= 180 ; (LHS = 0)
+     
+REMAINING ENTRY SKIPPED
+
+
+---- demand  =G=  demand constraint
+
+demand(D1)..  x(P1,D1) + x(P2,D1) + x(P3,D1) + x(P4,D1) =G= 180 ; (LHS = 0, INFES = 180 ****)
+     
+demand(D2)..  x(P1,D2) + x(P2,D2) + x(P3,D2) + x(P4,D2) =G= 200 ; (LHS = 0, INFES = 200 ****)
+     
+demand(D3)..  x(P1,D3) + x(P2,D3) + x(P3,D3) + x(P4,D3) =G= 160 ; (LHS = 0, INFES = 160 ****)
+     
+REMAINING 3 ENTRIES SKIPPED
+
+GAMS 37.1.0  r07954d5 Released Nov 11, 2021 WEX-WEI x86 64bit/MS Windows - 12/31/21 15:27:50 Page 3
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Column Listing      SOLVE question Using LP From line 54
+
+
+---- x  flow between supply node i to demand node j
+
+x(P1,D1)
+                (.LO, .L, .UP, .M = 0, 0, +INF, 0)
+       -7.5     cost
+        1       supply(P1)
+        1       demand(D1)
+
+x(P1,D2)
+                (.LO, .L, .UP, .M = 0, 0, +INF, 0)
+       -9       cost
+        1       supply(P1)
+        1       demand(D2)
+
+x(P1,D3)
+                (.LO, .L, .UP, .M = 0, 0, +INF, 0)
+       -8       cost
+        1       supply(P1)
+        1       demand(D3)
+
+REMAINING 21 ENTRIES SKIPPED
+
+---- z  total cost
+
+z
+                (.LO, .L, .UP, .M = -INF, 0, +INF, 0)
+        1       cost
+
+GAMS 37.1.0  r07954d5 Released Nov 11, 2021 WEX-WEI x86 64bit/MS Windows - 12/31/21 15:27:50 Page 4
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Model Statistics    SOLVE question Using LP From line 54
+
+
+MODEL STATISTICS
+
+BLOCKS OF EQUATIONS           3     SINGLE EQUATIONS           11
+BLOCKS OF VARIABLES           2     SINGLE VARIABLES           25
+NON ZERO ELEMENTS            69
+
+
+GENERATION TIME      =        0.016 SECONDS      4 MB  37.1.0 r07954d5 WEX-WEI
+GAMS 37.1.0  r07954d5 Released Nov 11, 2021 WEX-WEI x86 64bit/MS Windows - 12/31/21 15:27:50 Page 5
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Solution Report     SOLVE question Using LP From line 54
+
+
+               S O L V E      S U M M A R Y
+
+     MODEL   question            OBJECTIVE  z
+     TYPE    LP                  DIRECTION  MINIMIZE
+     SOLVER  CPLEX               FROM LINE  54
+
+**** SOLVER STATUS     1 Normal Completion
+**** MODEL STATUS      1 Optimal
+**** OBJECTIVE VALUE             6205.0000
+
+ RESOURCE USAGE, LIMIT          0.015 10000000000.000
+ ITERATION COUNT, LIMIT         7    2147483647
+--- *** This solver runs with a demo license. No commercial use.
+
+Reading parameter(s) from "C:\Users\fatma\Desktop\assignment_2019402204\cplex.opt"
+>>  objrng all
+>>  rhsrng all
+Finished reading from "C:\Users\fatma\Desktop\assignment_2019402204\cplex.opt"
+
+--- GMO setup time: 0.00s
+--- GMO memory 0.50 Mb (peak 0.50 Mb)
+--- Dictionary memory 0.00 Mb
+--- Cplex 20.1.0.1 link memory 0.00 Mb (peak 0.00 Mb)
+--- Starting Cplex
+
+
+--- LP status (1): optimal.
+--- Cplex Time: 0.00sec (det. 0.03 ticks)
+
+--- Start ranging / sensitivity analysis...
+--- Right-hand-side ranging...
+
+EQUATION NAME                            LOWER           CURRENT             UPPER
+-------------                            -----           -------             -----
+cost                                      -INF                NA              +INF   =C
+supply(P1)                                 290               290              +INF   =C
+supply(P2)                                 220               220               360   =C
+supply(P3)                                 180               180               320   =C
+supply(P4)                                 280               280              +INF   =C
+demand(D1)                                  40               180               180   =C
+demand(D2)                                  60               200               200   =C
+demand(D3)                                  20               160               160   =C
+demand(D4)                                   0               140               140   =C
+demand(D5)                                   0               250               250   =C
+demand(Dummy)                             -INF                40                40   =C
+
+--- Objective ranging...
+
+VARIABLE NAME                            LOWER           CURRENT             UPPER
+-------------                            -----           -------             -----
+x(P1.D1)                                   6.5               7.5              +INF   =C
+x(P1.D2)                                     7                 9              +INF   =C
+x(P1.D3)                                   7.5                 8               8.5   =C
+x(P1.D4)                                     0               5.5                 7   =C
+x(P1.D5)                                   7.5                 8              +INF   =C
+x(P1.Dummy)                               -0.5                 0                 0   =C
+x(P2.D1)                                  -0.5                 6                 7   =C
+x(P2.D2)                                   5.5               6.5                 7   =C
+x(P2.D3)                                   7.5                 8              +INF   =C
+x(P2.D4)                                     5               7.5              +INF   =C
+x(P2.D5)                                     7                 8              +INF   =C
+x(P2.Dummy)                               -0.5                 0              +INF   =C
+x(P3.D1)                                   5.5                11              +INF   =C
+x(P3.D2)                                   5.5                 6               6.5   =C
+x(P3.D3)                                   6.5                 7               7.5   =C
+x(P3.D4)                                   4.5                 7              +INF   =C
+x(P3.D5)                                   6.5               9.5              +INF   =C
+x(P3.Dummy)                                 -1                 0              +INF   =C
+x(P4.D1)                                   6.5                10              +INF   =C
+x(P4.D2)                                     7               7.5              +INF   =C
+x(P4.D3)                                     8                10              +INF   =C
+x(P4.D4)                                   5.5                 7              +INF   =C
+x(P4.D5)                                     0               7.5                 8   =C
+x(P4.Dummy)                               -0.5                 0                 0   =C
+z                                         -INF                NA              +INF   =C
+
+
+Optimal solution found
+Objective:         6205.000000
+
+
+                           LOWER          LEVEL          UPPER         MARGINAL
+
+---- EQU cost                .              .              .             1.0000      
+
+  cost  define objective function
+
+---- EQU supply  supply constraint
+
+          LOWER          LEVEL          UPPER         MARGINAL
+
+P1        -INF          290.0000       290.0000         EPS         
+P2        -INF          220.0000       220.0000        -0.5000      
+P3        -INF          180.0000       180.0000        -1.0000      
+P4        -INF          280.0000       280.0000         EPS         
+
+---- EQU demand  demand constraint
+
+             LOWER          LEVEL          UPPER         MARGINAL
+
+D1          180.0000       180.0000        +INF            6.5000      
+D2          200.0000       200.0000        +INF            7.0000      
+D3          160.0000       160.0000        +INF            8.0000      
+D4          140.0000       140.0000        +INF            5.5000      
+D5          250.0000       250.0000        +INF            7.5000      
+Dummy        40.0000        40.0000        +INF             .          
+
+---- VAR x  flow between supply node i to demand node j
+
+                LOWER          LEVEL          UPPER         MARGINAL
+
+P1.D1             .              .            +INF            1.0000      
+P1.D2             .              .            +INF            2.0000      
+P1.D3             .           140.0000        +INF             .          
+P1.D4             .           140.0000        +INF             .          
+P1.D5             .              .            +INF            0.5000      
+P1.Dummy          .            10.0000        +INF             .          
+P2.D1             .           180.0000        +INF             .          
+P2.D2             .            40.0000        +INF             .          
+P2.D3             .              .            +INF            0.5000      
+P2.D4             .              .            +INF            2.5000      
+P2.D5             .              .            +INF            1.0000      
+P2.Dummy          .              .            +INF            0.5000      
+P3.D1             .              .            +INF            5.5000      
+P3.D2             .           160.0000        +INF             .          
+P3.D3             .            20.0000        +INF             .          
+P3.D4             .              .            +INF            2.5000      
+P3.D5             .              .            +INF            3.0000      
+P3.Dummy          .              .            +INF            1.0000      
+P4.D1             .              .            +INF            3.5000      
+P4.D2             .              .            +INF            0.5000      
+P4.D3             .              .            +INF            2.0000      
+P4.D4             .              .            +INF            1.5000      
+P4.D5             .           250.0000        +INF             .          
+P4.Dummy          .            30.0000        +INF             .          
+
+                           LOWER          LEVEL          UPPER         MARGINAL
+
+---- VAR z                 -INF         6205.0000        +INF             .          
+
+  z  total cost
+
+
+**** REPORT SUMMARY :        0     NONOPT
+                             0 INFEASIBLE
+                             0  UNBOUNDED
+GAMS 37.1.0  r07954d5 Released Nov 11, 2021 WEX-WEI x86 64bit/MS Windows - 12/31/21 15:27:50 Page 6
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+E x e c u t i o n
+
+
+----     55 VARIABLE x.L  flow between supply node i to demand node j
+
+            D1          D2          D3          D4          D5       Dummy
+
+P1                             140.000     140.000                  10.000
+P2     180.000      40.000
+P3                 160.000      20.000
+P4                                                     250.000      30.000
+
+
+----     55 VARIABLE x.M  flow between supply node i to demand node j
+
+            D1          D2          D3          D4          D5       Dummy
+
+P1       1.000       2.000                               0.500
+P2                               0.500       2.500       1.000       0.500
+P3       5.500                               2.500       3.000       1.000
+P4       3.500       0.500       2.000       1.500
+
+
+----     55 VARIABLE z.L                   =     6205.000  total cost
+
+
+EXECUTION TIME       =        0.188 SECONDS      4 MB  37.1.0 r07954d5 WEX-WEI
+
+
+USER: GAMS Demo license for FATMANUR YAMAN           G211230|0002CO-GEN
+      BOGAZICI UNIVERSITY, Turkey                              DL057000
+
+
+**** FILE SUMMARY
+
+Input      C:\Users\fatma\Desktop\assignment_2019402204\1B.gms
+Output     C:\Users\fatma\Desktop\assignment_2019402204\1B.lst
